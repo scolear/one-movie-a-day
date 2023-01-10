@@ -6,7 +6,7 @@ const Card = ({ images, title, rating, text }) => {
   return (
     <div className="card">
       <div className="card__image-box">
-        <img src={images[currentImage]} alt="Card image" />
+        <img crossOrigin="anonymous" src={images[currentImage]} alt="Card image" />
         {/* <button onClick={() => setCurrentImage((currentImage + 1) % images.length)}>Next</button> */}
       </div>
       <div className="card__text-box">
