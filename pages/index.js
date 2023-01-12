@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
-import Card from '@components/Card'
+import { CarouselCard } from '@components/CardCarousel'
+import { Container } from '@mantine/core';
 import dataLoaderService from 'services/data-loader.service'
 
-const data = dataLoaderService();
+const data = dataLoaderService().getSortedByDate().slice(16, 18);
 
 export default function Home() {
   return (
@@ -14,12 +15,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Header title={'#onemovieaday'}/>
       <main>
-        <div className="card-container">
-          {data.map(props => (
-            <Card key={props.key} images={props.resources} title={props.movie_title} rating={props.rating} text={props.comment} />
+        <Container>
+        {data.map(props => (
+            <CarouselCard key={props.key} imageURLs={props.resources} title={props.movie_title} rating={props.rating} text={props.comment} link={props.link} />
           ))}
-        </div>
+        </Container>
       </main>
 
       <Footer />
