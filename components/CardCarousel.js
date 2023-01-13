@@ -1,6 +1,7 @@
 import { createStyles, Image, Card, Text, Group, Button } from '@mantine/core';
 import { Carousel } from '@mantine/carousel';
 import { useEffect, useState } from 'react';
+import loadImagesService from 'services/load-images.service';
 
 const useStyles = createStyles((theme, _params, getRef) => ({
   price: {
@@ -49,30 +50,27 @@ const fetchImage = async (url) => {
   return objurl;
 };
 
-export function CarouselCard({ imageURLs, title, rating, text, link }) {
+export function CarouselCard({ pk, imageURLs, title, rating, text, link }) {
   const { classes } = useStyles();
   const [loading, setLoading] = useState(false);
   const [slides, setSlides] = useState([]);
   let promises;
 
-  useEffect(() => {
-    promises = imageURLs.map(url => fetchImage(url));
-  }, [])
+  // useEffect(() => {
+  //   promises = imageURLs.map(url => fetchImage(url));
+  // }, [])
+
+  const imageData = loadImagesService(pk);
 
   useEffect(() => {
     setLoading(true);
-    Promise.all(promises)
-      .then(values => {
-        setSlides(values.map((image) => (
-          <Carousel.Slide key={image}>
-            <Image src={image} height={220} />
-          </Carousel.Slide>
-        )))
-      })
-      .then(() => {
-        setLoading(false);
-      })
-  }, [promises]);
+    setSlides(imageData.map((image) => (
+      <Carousel.Slide key={image.pk}>
+        <Image src={image.path} height={220} />
+      </Carousel.Slide>
+    )));
+    setLoading(false);
+  }, []);
 
   return (
     <Card radius="md" withBorder p="xl">

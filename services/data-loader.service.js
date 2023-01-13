@@ -1,4 +1,4 @@
-import data from '../data/data.json';
+import data from '../public/data/data.json';
 
 const MEDIA_TYPES = {
   Photo: 1,
@@ -34,14 +34,14 @@ const formattedData = filteredData.map(post => {
   const parsedCaption = spliceCaption(post.caption_text);
   if (!parsedCaption) return;
   return {
-    "key": post.id,
+    "key": post.pk,
     "date": post.taken_at,
     "link": `https://www.instagram.com/p/${post.code}/`,
     "movie_title": parsedCaption.title,
     "rating": parsedCaption.rating.text,
     "ratingValue": parsedCaption.rating.value,
     "comment": parsedCaption.comments,
-    "resources": post.resources.map(resource => resource.thumbnail_url)
+    "resourceKeys": post.resources.map(resource => resource.pk)
   }
 })
 
@@ -56,8 +56,9 @@ function getSortedByRating(ascending) {
 // We should return an object that has methods for next() previous() and different sorting, but only loads data and pictures once...
 export default () => {
   return {
-    initialData: formattedData.slice(5, 9),
+    initialData: formattedData.slice(0, 2),
     getSortedByDate,
     getSortedByRating,
+    allFilteredData: formattedData
   };
 }
