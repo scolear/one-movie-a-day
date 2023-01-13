@@ -5,7 +5,7 @@ import { CarouselCard } from '@components/CardCarousel'
 import { Container } from '@mantine/core';
 import dataLoaderService from 'services/data-loader.service'
 
-const data = dataLoaderService().getSortedByDate().slice(16, 18);
+const data = dataLoaderService().getSortedByRating().slice(26, 30);
 
 export default function Home() {
   return (
