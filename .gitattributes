@@ -1,8 +1,8 @@
-data/media/bogiaranyi_2724792297263908151.jpg filter=lfs diff=lfs merge=lfs -text
-data/media/bogiaranyi_2724792297272198477.jpg filter=lfs diff=lfs merge=lfs -text
-data/media/bogiaranyi_2724792297272368014.jpg filter=lfs diff=lfs merge=lfs -text
-data/media/bogiaranyi_2724792297280512855.jpg filter=lfs diff=lfs merge=lfs -text
-data/media/bogiaranyi_2724792297288971559.jpg filter=lfs diff=lfs merge=lfs -text
-data/media/bogiaranyi_2724792297297389949.jpg filter=lfs diff=lfs merge=lfs -text
-data/media/bogiaranyi_2724792297238579084.jpg filter=lfs diff=lfs merge=lfs -text
-data/media/bogiaranyi_2724792297247104090.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297288971559.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297297389949.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297238579084.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297247104090.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297263908151.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297272198477.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297272368014.jpg filter=lfs diff=lfs merge=lfs -text
+public/data/media/bogiaranyi_2724792297280512855.jpg filter=lfs diff=lfs merge=lfs -text
