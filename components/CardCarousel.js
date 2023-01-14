@@ -33,15 +33,15 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 }));
 
-const fetchImage = async (url) => {
-  const netlifyURL = `/.netlify/functions/get-images?url=${encodeURIComponent(url)}`;
+const fetchImage = async (key) => {
   let objurl;
+  const netlifyURL = `/.netlify/functions/get-image-s3?key=${key}`;
   await fetch(netlifyURL, {
     // headers: { accept: 'Accept: application/json' },
   })
-    .then((x) => x.json())
+    .then(x => x.json())
     .then(json => {
-      const buff = Buffer.from(json.msg)
+      const buff = Buffer.from(json);
       objurl = URL.createObjectURL(
         new Blob([buff.buffer], { type: 'image/png' })
       );
@@ -50,27 +50,34 @@ const fetchImage = async (url) => {
   return objurl;
 };
 
-export function CarouselCard({ pk, imageURLs, title, rating, text, link }) {
+fetchImage('2724792297288971559');
+
+export function CarouselCard({ pk, title, rating, text, link }) {
   const { classes } = useStyles();
   const [loading, setLoading] = useState(false);
   const [slides, setSlides] = useState([]);
   let promises;
 
-  // useEffect(() => {
-  //   promises = imageURLs.map(url => fetchImage(url));
-  // }, [])
-
   const imageData = loadImagesService(pk);
 
   useEffect(() => {
+    promises = imageData.map(data => fetchImage(data.pk));
+  }, [])
+
+  useEffect(() => {
     setLoading(true);
-    setSlides(imageData.map((image) => (
-      <Carousel.Slide key={image.pk}>
-        <Image src={image.path} height={220} />
-      </Carousel.Slide>
-    )));
-    setLoading(false);
-  }, []);
+    Promise.all(promises)
+      .then(values => {
+        setSlides(values.map((image) => (
+          <Carousel.Slide key={image}>
+            <Image src={image} height={270} />
+          </Carousel.Slide>
+        )));
+      })
+      .then(() => {
+        setLoading(false)
+      })
+  }, [promises]);
 
   return (
     <Card radius="md" withBorder p="xl">

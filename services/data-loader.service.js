@@ -1,4 +1,4 @@
-import data from '../public/data/data.json';
+import data from '../data/data.json';
 
 const MEDIA_TYPES = {
   Photo: 1,
@@ -10,7 +10,10 @@ function spliceCaption(caption) {
   const regex = /^(.+)\s+\(?(\d{4})?\)?\s*➡️\s*(\d+(\,?\.?\d+)?)\/10\s*(.*)$/s;
   const match = caption.match(regex);
   //TODO: we could do an if-else here instead to check for a modified regex which might capture more stuff (or create an ever better regex)
-  if (!match) { console.log(caption); return null; }
+  if (!match) {
+    // console.log(caption);
+    return null;
+  }
   const [, title, date, rating, , comment] = match;
   return {
     title: title + (date ? `${date}` : ''),

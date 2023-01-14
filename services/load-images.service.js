@@ -7,7 +7,7 @@ export default (key) => {
   return post.resourceKeys.map(pk =>
     ({
       pk: pk,
-      path: `../data/media/bogiaranyi_${pk}.jpg`
+      // path: `../data/media/bogiaranyi_${pk}.jpg`
     })
   )
 }
