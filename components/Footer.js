@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <>
       <footer className={styles.footer}>
-        Made with <img src="/netliheart.svg" alt="Netlify Logo" className={styles.logo} /> & ChatGPT by <Anchor href="https://github.com/scolear" target="_blank">robert tera</Anchor>
+        <img src="/githublogo.svg" alt="GitHub Logo" className={styles.logo} /><Anchor href="https://github.com/scolear" target="_blank">robert tera</Anchor>
       </footer>
     </>
   )

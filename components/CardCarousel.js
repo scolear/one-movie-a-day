@@ -98,13 +98,13 @@ export function CarouselCard({ pk, title, rating, text, link }) {
       </Card.Section>
 
       <Group position="apart" mt="lg">
-        <Text weight={500} size="lg">
+        <Text weight={500} size="md">
           {title}
         </Text>
 
         <Group spacing={5}>
-          <Text size="xs" weight={500}>
-            {rating}
+          <Text size="lg" weight={500}>
+            {rating}<Text span weight={200} size='sm'>/10</Text>
           </Text>
         </Group>
       </Group>

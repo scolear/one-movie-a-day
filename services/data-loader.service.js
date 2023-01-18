@@ -56,10 +56,9 @@ function getSortedByRating(ascending) {
   return formattedData.sort((a, b) => !ascending ? b.ratingValue - a.ratingValue : a.ratingValue - b.ratingValue);
 }
 
-// We should return an object that has methods for next() previous() and different sorting, but only loads data and pictures once...
 export default () => {
   return {
-    initialData: formattedData.slice(0, 2),
+    initialData: formattedData.slice(0, 5),
     getSortedByDate,
     getSortedByRating,
     allFilteredData: formattedData

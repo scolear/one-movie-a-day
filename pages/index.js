@@ -2,13 +2,14 @@ import Head from 'next/head'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 import { CarouselCard } from '@components/CardCarousel'
-import { Container } from '@mantine/core';
+import { Center, Container } from '@mantine/core';
 import dataLoaderService from 'services/data-loader.service'
+import Controls from '@components/Controls';
 
-const found = dataLoaderService().initialData.find(d => d.key == '2724792305325435269');
+const found = dataLoaderService().initialData;
 // NOTE: temporary
-const data = [found]
-
+const data = found
+console.log(data)
 
 export default function Home() {
   return (
@@ -17,10 +18,14 @@ export default function Home() {
         <title>One Movie A Day</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <Header title={'#onemovieaday'}/>
+      <Center>
+        <Header title={'#onemovieaday'}/>
+      </Center>
+      <Center>
+        <Controls></Controls>
+      </Center>
       <main>
-        <Container>
+        <Container size={600}>
         {data.map(props => (
             <CarouselCard key={props.key} pk={props.key} title={props.movie_title} rating={props.rating} text={props.comment} link={props.link} />
           ))}
