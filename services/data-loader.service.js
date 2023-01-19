@@ -58,7 +58,7 @@ function getSortedByRating(ascending) {
 
 export default () => {
   return {
-    initialData: formattedData.slice(0, 2),
+    initialData: formattedData.slice(0, 30),
     getSortedByDate,
     getSortedByRating,
     allFilteredData: formattedData

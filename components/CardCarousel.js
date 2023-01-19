@@ -1,5 +1,6 @@
 import { createStyles, Image, Card, Text, Group, Button } from '@mantine/core';
 import { Carousel } from '@mantine/carousel';
+import { IconBrandInstagram } from '@tabler/icons'
 import { useEffect, useState } from 'react';
 import loadImagesService from 'services/load-images.service';
 
@@ -50,7 +51,7 @@ const fetchImage = async (key) => {
   return objurl;
 };
 
-fetchImage('2724792297288971559');
+// fetchImage('2724792297288971559');
 
 export function CarouselCard({ pk, title, rating, text, link }) {
   const { classes } = useStyles();
@@ -125,7 +126,10 @@ export function CarouselCard({ pk, title, rating, text, link }) {
         </div>
 
         <Button
+          compact
+          rightIcon={<IconBrandInstagram scale={0.1}/>}
           variant="subtle"
+          color="pink"
           radius="md"
           component="a"
           rel="noopener noreferrer"
