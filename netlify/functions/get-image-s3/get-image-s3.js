@@ -16,6 +16,7 @@ const handler = async (event) => {
     return {
         "statusCode": 200,
         "body": JSON.stringify(buff),
+        "headers": { "cache-control": "max-age=15552000"}
     }
   } catch (error) {
     return { statusCode: 500, body: error.toString() }
