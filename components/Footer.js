@@ -1,10 +1,11 @@
 import styles from './Footer.module.css'
+import { Anchor } from '@mantine/core';
 
 export default function Footer() {
   return (
     <>
       <footer className={styles.footer}>
-        Made with <img src="/netliheart.svg" alt="Netlify Logo" className={styles.logo} /> for you
+        <img src="/githublogo.svg" alt="GitHub Logo" className={styles.logo} /><Anchor href="https://github.com/scolear" target="_blank">roberttera</Anchor>
       </footer>
     </>
   )
