@@ -1,26 +1,23 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react';
+import { Center,
+  Container,
+  Stack,
+  Space,
+  Pagination
+} from '@mantine/core';
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 import { CarouselCard } from '@components/CardCarousel'
-import { Center,
-         Container,
-         Stack,
-         Space,
-         Pagination
-        } from '@mantine/core';
 import dataLoaderService from 'services/data-loader.service'
 import Controls from '@components/Controls';
 
-const data = dataLoaderService().initialData;
-
-const dataLength = data.length;
-const displayBatchSize = 5;
-// let selectedDataSlice = data.slice(0, displayBatchSize)
-const pagesNo = Math.ceil(dataLength / displayBatchSize);
-console.log(dataLength, pagesNo)
+const dataLoaderSvc = dataLoaderService();
 
 export default function Home() {
+  const [data, setData] = useState(dataLoaderSvc.initialData);
+  const [displayBatchSize, setDisplayBatchSize] = useState(5);
+  const [pagesNo, setPagesNo] = useState(Math.ceil(data.length / displayBatchSize));
   const [activePage, setPage] = useState(1);
   const [startIndex, setStartIndex] = useState(0);
   const [dataSlice, setDataSlice] = useState(data.slice(0, displayBatchSize));
@@ -33,6 +30,22 @@ export default function Home() {
     setDataSlice(data.slice(startIndex, startIndex + displayBatchSize))
   }, [startIndex])
 
+  useEffect(() => {
+    console.log('Setting new data');
+    setDataSlice(data.slice(startIndex, startIndex + displayBatchSize))
+  }, [data])
+
+  function orderByDate() {
+    const newData = [...data];
+    newData.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+    setData(newData);
+  }
+
+  function orderByRating() {
+    const newData = [...data];
+    newData.sort((a, b) => b.ratingValue - a.ratingValue);
+    setData(newData);
+  }
 
   return (
     <div className="container">
@@ -44,7 +57,7 @@ export default function Home() {
         <Header title={'#onemovieaday'}/>
       </Center>
       <Center>
-        <Controls></Controls>
+        <Controls byDate={orderByDate} byRating={orderByRating}></Controls>
       </Center>
       <Space h="sm" />
       <Center>

@@ -35,7 +35,9 @@ const filteredData = filterData(data);
 
 const formattedData = filteredData.map(post => {
   const parsedCaption = spliceCaption(post.caption_text);
-  if (!parsedCaption) return;
+  if (!parsedCaption) {
+    console.log(`https://www.instagram.com/p/${post.code}/`, post.caption_text)
+    return;}
   return {
     "key": post.pk,
     "date": post.taken_at,
@@ -46,21 +48,10 @@ const formattedData = filteredData.map(post => {
     "comment": parsedCaption.comments,
     "resourceKeys": post.resources.map(resource => resource.pk)
   }
-})
-
-function getSortedByDate(oldestFirst) {
-  return formattedData.sort((a, b) => oldestFirst ? Date.parse(a.date) - Date.parse(b.date) : Date.parse(b.date) - Date.parse(a.date))
-}
-
-function getSortedByRating(ascending) {
-  return formattedData.sort((a, b) => !ascending ? b.ratingValue - a.ratingValue : a.ratingValue - b.ratingValue);
-}
+}).filter(fd => fd?.key); // TODO: This is weird
 
 export default () => {
   return {
-    initialData: formattedData.slice(0, 30),
-    getSortedByDate,
-    getSortedByRating,
-    allFilteredData: formattedData
+    initialData: formattedData
   };
 }
