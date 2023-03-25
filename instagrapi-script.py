@@ -1,12 +1,12 @@
+import boto3
+from instagrapi import Client
+import shutil
+import datetime
+import re
+import json
+import os
 from dotenv import load_dotenv
 load_dotenv()
-import os
-import json
-import re
-import datetime
-import shutil
-from instagrapi import Client
-import boto3
 
 #  INITIAL DOWNLOAD
 # 1. Fetch all posts with hashtag
@@ -36,10 +36,11 @@ def get_login():
             print('loading session data from file')
             cl_session = json.load(f)
     else:
-        cl_session =  {}
+        cl_session = {}
 
     cl = Client(cl_session)
-    cl.login(os.environ["INSTAGRAM_USERNAME"], os.environ["INSTAGRAM_PASSWORD"])
+    cl.login(os.environ["INSTAGRAM_USERNAME"],
+             os.environ["INSTAGRAM_PASSWORD"])
 
     with open('insta-session.json', 'w') as f:
         json.dump(cl.get_settings(), f)
@@ -51,7 +52,8 @@ def filter_data(posts, ids):
     posts_dicts = []
     for post in posts:
         post_dict = post.dict()
-        match = re.search(r'(\d+\s?\.?\,?\d?)\/(\s?10)', post_dict["caption_text"])
+        match = re.search(r'(\d+\s?\.?\,?\d?)\/(\s?10)',
+                          post_dict["caption_text"])
         match_hashtag = re.search(r'#onemovieaday', post_dict["caption_text"])
 
         if match and match_hashtag and post_dict["user"]["username"] == "bogiaranyi" and not post_dict["id"] in ids:
@@ -96,10 +98,12 @@ def upload_files_to_S3(s3, folder_path):
                 Key=extract_number_from_filename(file_path)
             )
 
+
 def extract_ids(filepath):
     with open(filepath, 'r') as f:
         data = json.load(f)
     return [item['id'] for item in data]
+
 
 def initial_download():
     cl = get_login()
@@ -118,7 +122,8 @@ def initial_download():
             os.makedirs(tmp_folder_path)
 
         # Initial download
-        posts, cursor = cl.hashtag_medias_v1_chunk('mindennapegyfilm', max_amount = batch_size, tab_key = 'recent', max_id = cursor)
+        posts, cursor = cl.hashtag_medias_v1_chunk(
+            'mindennapegyfilm', max_amount=batch_size, tab_key='recent', max_id=cursor)
 
         # Filtering and unwrapping into a list of dicts
         posts_dicts = filter_data(posts, ids)
@@ -134,10 +139,11 @@ def initial_download():
 
             if post["media_type"] == 1:
                 #  This will create a bogiaranyi_postpk.jpg file
-                cl.photo_download(post["pk"], folder = tmp_folder_path)
+                cl.photo_download(post["pk"], folder=tmp_folder_path)
             elif post["media_type"] == 2 and post["product_type"] == "feed":
                 #  This will create a bogiaranyi_postpk.jpg file from video thumbnail
-                cl.photo_download_by_url(post["thumbnail_url"], filename = "bogiaranyi_" + post["pk"] + ".jpg", folder = tmp_folder_path)
+                cl.photo_download_by_url(
+                    post["thumbnail_url"], filename="bogiaranyi_" + post["pk"] + ".jpg", folder=tmp_folder_path)
             elif post["media_type"] == 8:
                 #  This will create many bogiaranyi_RESOURCEPK.jpgs
                 if any(val["media_type"] == 2 for val in post["resources"]):
@@ -145,7 +151,7 @@ def initial_download():
                     continue
                 else:
                     #  This is the most common
-                    cl.album_download(post["pk"], folder = tmp_folder_path)
+                    cl.album_download(post["pk"], folder=tmp_folder_path)
 
             # Writing to data.json
             # TODO: update path once everything is working
@@ -162,14 +168,19 @@ def initial_download():
         print("count: ", count)
         count += batch_size
 
+
 def load_json(path):
     with open(path) as f:
         data = json.load(f)
     return data
 
+
 def write_json(path, data):
     with open(path, 'w') as f:
         json.dump(data, f)
+
+# Update data fetch
+
 
 def main():
     cl = get_login()
@@ -184,7 +195,7 @@ def main():
     ids = extract_ids(data_file_path)
     json_data = load_json(data_file_path)
 
-    posts = cl.user_medias(user_id = userid, amount = 50)
+    posts = cl.user_medias(user_id=userid, amount=50)
 
     posts_dicts = filter_data(posts, ids)
     print(len(posts_dicts))
@@ -196,7 +207,8 @@ def main():
         post["taken_at"] = post["taken_at"].isoformat()
 
         processed += 1
-        print(f"{processed}/{len(posts_dicts)} :", post["code"], post["media_type"], post["taken_at"])
+        print(f"{processed}/{len(posts_dicts)} :",
+              post["code"], post["media_type"], post["taken_at"])
 
         if post["media_type"] == 1:
             filename = f"bogiaranyi_{post['pk']}.jpg"
@@ -206,14 +218,15 @@ def main():
             else:
                 try:
                     #  This will create a bogiaranyi_postpk.jpg file
-                    cl.photo_download(post["pk"], folder = tmp_folder_path)
+                    cl.photo_download(post["pk"], folder=tmp_folder_path)
                 except:
                     print(f'error downloading {filename}')
                     continue
         elif post["media_type"] == 2 and post["product_type"] == "feed":
             #  This will create a bogiaranyi_postpk.jpg file from video thumbnail
             continue
-            cl.photo_download_by_url(post["thumbnail_url"], filename = "bogiaranyi_" + post["pk"] + ".jpg", folder = tmp_folder_path)
+            cl.photo_download_by_url(
+                post["thumbnail_url"], filename="bogiaranyi_" + post["pk"] + ".jpg", folder=tmp_folder_path)
         elif post["media_type"] == 8:
             if any(val["media_type"] == 2 for val in post["resources"]):
                 #  Skipping video albums
@@ -221,19 +234,20 @@ def main():
             else:
                 #  This will create many bogiaranyi_RESOURCEPK.jpgs
                 #  This is the most common
-                filenames = [f"bogiaranyi_{res['pk']}.jpg" for res in post["resources"]]
-                filenames.extend([f"bogiaranyi_{res['pk']}.webp" for res in post["resources"]])
+                filenames = [
+                    f"bogiaranyi_{res['pk']}.jpg" for res in post["resources"]]
+                filenames.extend(
+                    [f"bogiaranyi_{res['pk']}.webp" for res in post["resources"]])
 
                 if any(os.path.isFile(os.path.join(tmp_folder_path, file)) for file in filenames):
                     print(f'files for post {post["pk"]} already exist')
                     continue
                 else:
                     try:
-                        cl.album_download(post["pk"], folder = tmp_folder_path)
+                        cl.album_download(post["pk"], folder=tmp_folder_path)
                     except:
                         print(f'error downloading {post["pk"]} album')
                         continue
-
 
     # Adding new elements to the front
     json_data = posts_dicts + json_data
@@ -249,3 +263,21 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#  i used this to flatten the json structure
+# json_data = load_json(data_file_path)
+
+#     # Modify the JSON structure
+#     new_data = []
+#     for item in json_data:
+#         if isinstance(item, list):  # If item is an array
+#             if item:  # If item is not empty
+#                 new_data.extend(item)  # Move contents up one level
+#         else:
+#             # If item is an object, add it to the new_data list
+#             new_data.append(item)
+
+#     # Write the modified JSON back to a file
+#     with open('output.json', 'w') as output_file:
+#         json.dump(new_data, output_file, indent=4)

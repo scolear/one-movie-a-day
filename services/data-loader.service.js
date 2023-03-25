@@ -11,7 +11,7 @@ function spliceCaption(caption) {
   const match = caption.match(regex);
   //TODO: we could do an if-else here instead to check for a modified regex which might capture more stuff (or create an ever better regex)
   if (!match) {
-    // console.log(caption);
+    console.log(caption);
     return null;
   }
   const [, title, date, rating, , comment] = match;
@@ -28,7 +28,7 @@ function filterData(_data) {
   return _data
     .filter((post, index) => !ids.includes(post.id, index + 1))
     .filter(post => post.user.username == "bogiaranyi")
-    .filter(post => post.caption_text.includes('\u27a1\ufe0f'));
+    // .filter(post => post.caption_text.includes('\u27a1\ufe0f'));
 }
 
 const filteredData = filterData(data);
