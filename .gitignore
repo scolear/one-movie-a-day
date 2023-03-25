@@ -3,7 +3,8 @@
 insta-session.json
 .env
 data/tmp/
-data/data_BAK*
+data/*bak*
+images/*
 
 # dependencies
 /node_modules
