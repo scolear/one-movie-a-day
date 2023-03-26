@@ -41,7 +41,7 @@ function spliceCaption(caption) {
   }
 
   if (!match) {
-    console.log(caption);
+    // console.log(caption);
     return null;
   }
 
@@ -50,16 +50,6 @@ function spliceCaption(caption) {
     rating: { text: rating, value: parseFloat(rating) },
     comments: comment,
   };
-}
-
-// Removing duplicates, filtering for user
-// TODO: we could safely remove this function, if the data is already filtered
-function filterData(_data) {
-  const ids = _data.map((o) => o.id);
-  return _data.filter(
-    (post, index) =>
-      !ids.includes(post.id, index + 1) && post.user.username == "bogiaranyi"
-  );
 }
 
 function processPost(post) {
@@ -83,9 +73,7 @@ function processPost(post) {
   };
 }
 
-const filteredData = filterData(data);
-
-const formattedData = filteredData.reduce((acc, post) => {
+const formattedData = data.reduce((acc, post) => {
   const processedPost = processPost(post);
   if (processedPost?.key) {
     acc.push(processedPost);
