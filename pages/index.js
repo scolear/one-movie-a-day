@@ -8,6 +8,7 @@ import {
   Space,
   Pagination,
   TextInput,
+  Flex,
 } from "@mantine/core";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
@@ -52,6 +53,10 @@ export default function Home() {
     }
   }, [searchTerm, setData]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [dataSlice]);
+
   const orderByDate = useCallback(() => {
     const newData = [...data].sort(
       (a, b) => Date.parse(b.date) - Date.parse(a.date)
@@ -73,20 +78,27 @@ export default function Home() {
       <Center>
         <Header title={"#onemovieaday"} />
       </Center>
-      <Center>
+      <Flex
+        gap="lg"
+        justify="space-evenly"
+        align="center"
+        direction="row"
+        wrap="nowrap"
+      >
         <Controls byDate={orderByDate} byRating={orderByRating}></Controls>
+
         <TextInput
-          placeholder="search titles, directors, actors, etc."
+          placeholder="search"
           icon={<IconSearch size="0.8rem" />}
           size="xs"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.currentTarget.value)}
         />
-      </Center>
+      </Flex>
       <Center></Center>
       <Space h="sm" />
       <Center>
-        <Pagination
+        {/* <Pagination
           page={activePage}
           onChange={setActivePage}
           total={pagesNo}
@@ -96,7 +108,7 @@ export default function Home() {
           size="sm"
           radius="md"
           withEdges
-        />
+        /> */}
       </Center>
       <Space h="md" />
       <main>
@@ -121,7 +133,8 @@ export default function Home() {
           page={activePage}
           onChange={setActivePage}
           total={pagesNo}
-          siblings={1}
+          siblings={0}
+          boundaries={0}
           color="red"
           size="sm"
           radius="md"

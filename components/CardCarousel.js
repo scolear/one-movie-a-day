@@ -1,4 +1,15 @@
-import { createStyles, Image, Card, Text, Group, Button } from "@mantine/core";
+import {
+  createStyles,
+  Image,
+  Card,
+  Text,
+  Group,
+  Button,
+  Spoiler,
+  Loader,
+  Center,
+  Accordion,
+} from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import { IconBrandInstagram } from "@tabler/icons";
 import { useEffect, useState } from "react";
@@ -85,6 +96,11 @@ export function CarouselCard({ pk, title, rating, text, link }) {
   return (
     <Card radius="md" withBorder p="xl">
       <Card.Section>
+        {loading && (
+          <Center maw={400} h={100} mx="auto">
+            <Loader color="pink"></Loader>
+          </Center>
+        )}
         {!loading && slides.length != 0 && (
           <Carousel
             withIndicators
@@ -99,7 +115,6 @@ export function CarouselCard({ pk, title, rating, text, link }) {
           </Carousel>
         )}
       </Card.Section>
-
       <Group position="apart" mt="lg">
         <Text weight={500} size="md">
           {title}
@@ -114,6 +129,7 @@ export function CarouselCard({ pk, title, rating, text, link }) {
           </Text>
         </Group>
       </Group>
+      {/* <Spoiler showLabel=". . ." hideLabel="fuck off" transitionDuration={1000}> */}
 
       <Text size="sm" color="dimmed" mt="sm">
         {text}
