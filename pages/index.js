@@ -1,6 +1,14 @@
 import Head from "next/head";
-import { useState, useEffect } from "react";
-import { Center, Container, Stack, Space, Pagination } from "@mantine/core";
+import { useState, useEffect, useCallback } from "react";
+import { IconSearch } from "@tabler/icons-react";
+import {
+  Center,
+  Container,
+  Stack,
+  Space,
+  Pagination,
+  TextInput,
+} from "@mantine/core";
 import Header from "@components/Header";
 import Footer from "@components/Footer";
 import { CarouselCard } from "@components/CardCarousel";
@@ -9,40 +17,52 @@ import Controls from "@components/Controls";
 
 const dataLoaderSvc = dataLoaderService();
 
-export default function Home() {
-  const [data, setData] = useState(dataLoaderSvc.initialData);
-  const [displayBatchSize, setDisplayBatchSize] = useState(5);
+const usePaginator = (initialData, displayBatchSize) => {
+  const [data, setData] = useState(initialData);
   const [pagesNo, setPagesNo] = useState(
     Math.ceil(data.length / displayBatchSize)
   );
-  const [activePage, setPage] = useState(1);
-  const [startIndex, setStartIndex] = useState(0);
+  const [activePage, setActivePage] = useState(1);
   const [dataSlice, setDataSlice] = useState(data.slice(0, displayBatchSize));
 
   useEffect(() => {
-    setStartIndex((activePage - 1) * displayBatchSize);
-  }, [activePage]);
+    setPagesNo(Math.ceil(data.length / displayBatchSize));
+  }, [data, displayBatchSize]);
 
   useEffect(() => {
+    const startIndex = (activePage - 1) * displayBatchSize;
     setDataSlice(data.slice(startIndex, startIndex + displayBatchSize));
-  }, [startIndex]);
+  }, [activePage, data, displayBatchSize]);
+
+  return { data, setData, pagesNo, activePage, setActivePage, dataSlice };
+};
+
+export default function Home() {
+  const displayBatchSize = 5;
+  const { data, setData, pagesNo, activePage, setActivePage, dataSlice } =
+    usePaginator(dataLoaderSvc.initialData, displayBatchSize);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    console.log("Setting new data");
-    setDataSlice(data.slice(startIndex, startIndex + displayBatchSize));
-  }, [data]);
+    if (searchTerm !== "") {
+      const newData = dataLoaderSvc.search(searchTerm);
+      setData(newData);
+    } else {
+      setData(dataLoaderSvc.initialData);
+    }
+  }, [searchTerm, setData]);
 
-  function orderByDate() {
-    const newData = [...data];
-    newData.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+  const orderByDate = useCallback(() => {
+    const newData = [...data].sort(
+      (a, b) => Date.parse(b.date) - Date.parse(a.date)
+    );
     setData(newData);
-  }
+  }, [data, setData]);
 
-  function orderByRating() {
-    const newData = [...data];
-    newData.sort((a, b) => b.ratingValue - a.ratingValue);
+  const orderByRating = useCallback(() => {
+    const newData = [...data].sort((a, b) => b.ratingValue - a.ratingValue);
     setData(newData);
-  }
+  }, [data, setData]);
 
   return (
     <div className="container">
@@ -55,12 +75,20 @@ export default function Home() {
       </Center>
       <Center>
         <Controls byDate={orderByDate} byRating={orderByRating}></Controls>
+        <TextInput
+          placeholder="search titles, directors, actors, etc."
+          icon={<IconSearch size="0.8rem" />}
+          size="xs"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.currentTarget.value)}
+        />
       </Center>
+      <Center></Center>
       <Space h="sm" />
       <Center>
         <Pagination
           page={activePage}
-          onChange={setPage}
+          onChange={setActivePage}
           total={pagesNo}
           siblings={0}
           boundaries={1}
@@ -91,7 +119,7 @@ export default function Home() {
       <Center>
         <Pagination
           page={activePage}
-          onChange={setPage}
+          onChange={setActivePage}
           total={pagesNo}
           siblings={1}
           color="red"

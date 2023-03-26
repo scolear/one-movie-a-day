@@ -84,5 +84,11 @@ const formattedData = data.reduce((acc, post) => {
 export default () => {
   return {
     initialData: formattedData,
+    search: (query) => {
+      const regex = new RegExp(query, "i");
+      return formattedData.filter((post) =>
+        regex.test(post.movie_title + post.comment)
+      );
+    },
   };
 };
