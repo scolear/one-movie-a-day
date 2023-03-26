@@ -17,14 +17,7 @@ function spliceCaption(caption) {
       },
     },
     {
-      regex:
-        /([\w\s(),]+)\s+((?:\d(?:[.,]\d)?|10))\/10\s*([\s\S]*?)(?=(?:\d(?:[.,]\d)?|10)\/10|$)/,
-      extract: (match) => {
-        [, title, rating, comment] = match;
-      },
-    },
-    {
-      regex: /(.+)\s+((?:\d(?:[.,]\d)?|10))\/10\s*(.*)/,
+      regex: /(.+?)\s+((?:\d(?:[.,]\d)?|10))\/10\s*([\s\S]*)/,
       extract: (match) => {
         [, title, rating, comment] = match;
       },
